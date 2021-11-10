@@ -1,50 +1,76 @@
 const express = require("express");
 const router = express.Router();
-const firstAssignment = require("../../config/FirstAssignmentDb.js");
+const {
+  getAllValues,
+  getCorrectAnswerByID,
+  getCheckTable,
+  getCorrectTable,
+  updateUserAnswer,
+  updateUserStatus,
+  getUserStatusByID,
+  resetUserAnswers,
+  resetUserStatus,
+} = require("./FirstAssignmentQueries.js");
+
+const replaceAll = (str) => {
+  for (let index = 0; index < str.length; index++) {
+    str = str.replace(`'`, `"`);
+  }
+
+  return str;
+};
 
 router.get("/questions", async (req, res) => {
   try {
-    const [result, _] = await firstAssignment.execute(
-      `select  id, question from assignment;`
-    );
+    const [result, _] = await getAllValues();
     res.json(result);
   } catch (err) {
-    console.log("ERRROOORRRR!!!");
-    console.log(err);
+    throw err;
   }
 });
 
-router.get("/checkAnswer", async (req, res) => {
+router.post("/checkAnswer", async (req, res) => {
+  let { id, userAnswer } = req.body;
+  userAnswer = replaceAll(userAnswer);
   try {
-    let { id, checkAnswer } = req.query;
-    const [querry, _] =
-      await firstAssignment.execute(`select answer from assignment
-    where id = ${id};`);
+    await updateUserAnswer(userAnswer, id);
 
-    checkAnswer = checkAnswer.replace(";", "");
-    const correctQuerry = querry[0].answer;
-    const [checkTable] = await firstAssignment.execute(
-      `${checkAnswer} union ${correctQuerry}`
-    );
-    const [correctTable] = await firstAssignment.execute(correctQuerry);
+    const [querry, _] = await getCorrectAnswerByID(id);
+
+    userAnswer = userAnswer.replace(";", "");
+
+    const correctQuerry = querry[0].correctAnswer;
+    const [checkTable] = await getCheckTable(userAnswer, correctQuerry);
+
+    const [correctTable] = await getCorrectTable(correctQuerry);
 
     if (checkTable.length === correctTable.length) {
-      res.json({
-        status: "Approved",
-      });
+      await updateUserStatus("APPROVED", id);
+      const [result, _] = await getUserStatusByID(id);
+      res.json(result);
     } else {
-      res.json({
-        status: "Rejected",
-      });
+      await updateUserStatus("REJECTED", id);
+      const [result, _] = await getUserStatusByID(id);
+      res.json(result);
     }
   } catch (err) {
     if (err) {
-      res.json({
-        status: "Error",
-      });
+      await updateUserStatus("ERROR", id);
+      await updateUserAnswer(userAnswer, id);
+
+      const [result, _] = await getUserStatusByID(id);
+      res.json(result);
     }
-    console.log("ERRROOORRR!!!");
+    throw err;
   }
 });
 
+router.post("/reset", async (req, res) => {
+  try {
+    await resetUserAnswers();
+    await resetUserStatus();
+  } catch (err) {
+    throw err;
+  }
+});
 module.exports = router;
