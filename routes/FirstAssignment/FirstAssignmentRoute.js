@@ -54,6 +54,7 @@ router.post("/checkAnswer", async (req, res) => {
       res.json(result);
     }
   } catch (err) {
+    console.log("Error!!");
     if (err) {
       await updateUserStatus("ERROR", id);
       await updateUserAnswer(userAnswer, id);
@@ -61,7 +62,6 @@ router.post("/checkAnswer", async (req, res) => {
       const [result, _] = await getUserStatusByID(id);
       res.json(result);
     }
-    throw err;
   }
 });
 
