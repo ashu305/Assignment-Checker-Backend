@@ -1,6 +1,5 @@
-const express = require("express");
-const router = express.Router();
-const {
+import * as express from "express";
+import {
   getAllValues,
   getCorrectAnswerByID,
   getCheckTable,
@@ -10,9 +9,10 @@ const {
   getUserStatusByID,
   resetUserAnswers,
   resetUserStatus,
-} = require("./FirstAssignmentQueries.js");
+} from "./FirstAssignmentQueries";
 
-const replaceAll = (str) => {
+const router = express.Router();
+const replaceAll = (str: string) => {
   for (let index = 0; index < str.length; index++) {
     str = str.replace(`'`, `"`);
   }
@@ -73,4 +73,5 @@ router.post("/reset", async (req, res) => {
     throw err;
   }
 });
-module.exports = router;
+
+export default router;

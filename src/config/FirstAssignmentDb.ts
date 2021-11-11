@@ -1,10 +1,10 @@
 const firstAssignmentDb = require("mysql2");
-const {
+import {
   DB_PORT,
   DB_PASSWORD,
   DB_HOST,
   DB_USER,
-} = require("../constants/DatabaseConstants");
+} from "../constants/DatabaseConstants";
 
 const firstAssignment = firstAssignmentDb.createPool({
   user: DB_USER,
@@ -14,4 +14,4 @@ const firstAssignment = firstAssignmentDb.createPool({
   port: DB_PORT,
 });
 
-module.exports = firstAssignment.promise();
+export default firstAssignment.promise();

@@ -1,4 +1,4 @@
-const firstAssignment = require("../../config/FirstAssignmentDb.js");
+import firstAssignment from "../config/FirstAssignmentDB";
 
 const getAllValues = () => {
   return firstAssignment.execute(
@@ -48,7 +48,7 @@ const resetUserStatus = () => {
     `update assignment set userStatus='Not Started' where userStatus !='Not Started';`
   );
 };
-module.exports = {
+export {
   getAllValues,
   getCorrectAnswerByID,
   getCheckTable,
