@@ -47,20 +47,18 @@ router.post("/checkAnswer", async (req, res) => {
     if (checkTable.length === correctTable.length) {
       await updateUserStatus("APPROVED", id);
       const [result, _] = await getUserStatusByID(id);
-      res.json(result);
+      res.json({ status: result });
     } else {
       await updateUserStatus("REJECTED", id);
       const [result, _] = await getUserStatusByID(id);
-      res.json(result);
+      res.json({ status: result });
     }
   } catch (err) {
-    console.log("Error!!");
     if (err) {
       await updateUserStatus("ERROR", id);
       await updateUserAnswer(userAnswer, id);
-
       const [result, _] = await getUserStatusByID(id);
-      res.json(result);
+      res.json({ status: result, error: err });
     }
   }
 });
@@ -69,6 +67,7 @@ router.post("/reset", async (req, res) => {
   try {
     await resetUserAnswers();
     await resetUserStatus();
+    res.send("Reset Successfull!!");
   } catch (err) {
     throw err;
   }
