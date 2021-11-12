@@ -1,6 +1,6 @@
 # Assignment-Checker-Backend
 
-Backend of the Assignment Checker Web application
+This is the Backend part of the Full Stack Assignment checker web application using react, node, express and MySql
 
 # use npm run dev
 
