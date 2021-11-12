@@ -10,6 +10,6 @@ Backend of the Assignment Checker Web application
 
 - It will compile all the typescript files from src folder into a dist folder
 
-# The compliled javascript files are in the dist folder
-# The type script files are in src folder
+### The compliled javascript files are in the dist folder
+### The type script files are in src folder
 
