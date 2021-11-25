@@ -12,7 +12,10 @@ const getCorrectAnswerByID = (id) => {
 };
 
 const getCheckTable = (userAnswer, correctQuery) => {
-  return firstAssignment.execute(`${userAnswer} union ${correctQuery}`);
+  let correct = correctQuery.replace(";", "");
+  return firstAssignment.execute(
+    `(${userAnswer}) union (${correctQuery.replace(";", "")});`
+  );
 };
 
 const getCorrectTable = (correctQuerry) => {
